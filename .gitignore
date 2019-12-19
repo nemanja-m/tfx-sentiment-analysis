@@ -130,3 +130,5 @@ dmypy.json
 
 *.csv
 *.tar.gz
+
+.idea/
