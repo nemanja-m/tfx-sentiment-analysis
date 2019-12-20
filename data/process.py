@@ -8,6 +8,7 @@ from langua import Predict
 from langua.lang_detect_exception import LangDetectException
 from pandarallel import pandarallel
 
+
 pandarallel.initialize(verbose=0)
 
 LANGUAGE_DETECTOR = Predict()
@@ -22,10 +23,10 @@ def _is_valid(row: pd.Series) -> bool:
     if language != "en":
         return False
 
-    if not isinstance(row.review, str):
+    if not row.review.strip():
         return False
 
-    if not row.review.strip():
+    if row.review.isdigit():
         return False
 
     return True
@@ -39,17 +40,24 @@ def _clean_row(row: pd.Series) -> Tuple[int, str, str]:
 
 
 def _clean_text(text: str) -> str:
+    if not isinstance(text, str):
+        return ""
+
     lowercase = text.lower()
-    clean_text = re.sub("[^a-zA-Z\\s]", "", lowercase)
-    return clean_text
+    clean_lowercase = re.sub("[^a-zA-Z\\s]", " ", lowercase)
+    clean_whitespace = re.sub("\\s+", " ", clean_lowercase).strip()
+    return clean_whitespace
 
 
 def _process(filename: str) -> pd.DataFrame:
     df = pd.read_csv(filename, header=None, names=["label", "title", "review"])
     non_spam_indexes = df.parallel_apply(_is_valid, axis=1)
     non_spam_df = df[non_spam_indexes]
-    non_spam_df = non_spam_df.parallel_apply(_clean_row, result_type="broadcast", axis=1)
-    return non_spam_df
+    clean_df = non_spam_df.parallel_apply(_clean_row, result_type="broadcast", axis=1)
+
+    # Remove rows with empty review.
+    processed_df = clean_df[clean_df.review.astype(bool)]
+    return processed_df
 
 
 if __name__ == "__main__":
