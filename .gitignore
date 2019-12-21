@@ -137,3 +137,6 @@ dmypy.json
 
 # Model weights
 *.hdf5
+
+# Training tensorboard logs
+**/logs/
