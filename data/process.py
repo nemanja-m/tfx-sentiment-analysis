@@ -8,7 +8,6 @@ from langua import Predict
 from langua.lang_detect_exception import LangDetectException
 from pandarallel import pandarallel
 
-
 pandarallel.initialize(verbose=0)
 
 LANGUAGE_DETECTOR = Predict()
