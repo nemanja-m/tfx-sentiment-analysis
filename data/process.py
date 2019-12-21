@@ -56,8 +56,7 @@ def _process(filename: str) -> pd.DataFrame:
     clean_df = non_spam_df.parallel_apply(_clean_row, result_type="broadcast", axis=1)
 
     # Remove rows with empty review.
-    processed_df = clean_df[clean_df.review.astype(bool)]
-    return processed_df
+    return clean_df[clean_df.review.astype(bool)]
 
 
 if __name__ == "__main__":
