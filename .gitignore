@@ -140,3 +140,6 @@ dmypy.json
 
 # Training tensorboard logs
 **/logs/
+
+# TFX pipeline and metadata files
+.tfx/
