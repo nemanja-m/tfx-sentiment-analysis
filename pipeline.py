@@ -5,6 +5,7 @@ from tfx.components import CsvExampleGen
 from tfx.orchestration import metadata
 from tfx.orchestration import pipeline
 from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
+from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
 from tfx.utils.dsl_utils import external_input
 
 _root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -25,7 +26,7 @@ _SERVING_MODEL_DIR = os.path.join(_TFX_ROOT, "serving")
 _BEAM_WORKERS_COUNT = 0
 
 _AIRFLOW_CONFIG = {
-    "schedule_intervals": None,
+    "schedule_interval": None,
     "start_date": datetime.datetime(2019, 1, 1),
 }
 
@@ -71,4 +72,4 @@ _pipeline = _create_pipeline(
     direct_workers_count=_BEAM_WORKERS_COUNT,
 )
 
-DAG = AirflowDagRunner(_AIRFLOW_CONFIG).run(_pipeline)
+DAG = AirflowDagRunner(AirflowPipelineConfig(_AIRFLOW_CONFIG)).run(_pipeline)
