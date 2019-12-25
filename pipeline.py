@@ -2,6 +2,9 @@ import datetime
 import os
 
 from tfx.components import CsvExampleGen
+from tfx.components import SchemaGen
+from tfx.components import StatisticsGen
+from tfx.components import Transform
 from tfx.orchestration import metadata
 from tfx.orchestration import pipeline
 from tfx.orchestration.airflow.airflow_dag_runner import AirflowDagRunner
@@ -44,6 +47,18 @@ def _create_pipeline(
     examples = external_input(data_root)
     example_gen = CsvExampleGen(input=examples)
 
+    statistics_gen = StatisticsGen(examples=example_gen.outputs["examples"])
+
+    schema_gen = SchemaGen(
+        statistics=statistics_gen.outputs["statistics"], infer_feature_shape=False
+    )
+
+    transform = Transform(
+        examples=example_gen.outputs["examples"],
+        schema=schema_gen.outputs["schema"],
+        module_file=module_file,
+    )
+
     metadata_connection_config = metadata.sqlite_metadata_connection_config(
         metadata_path
     )
@@ -55,7 +70,7 @@ def _create_pipeline(
     return pipeline.Pipeline(
         pipeline_name=pipeline_name,
         pipeline_root=pipeline_root,
-        components=[example_gen],
+        components=[example_gen, statistics_gen, schema_gen, transform],
         enable_cache=True,
         metadata_connection_config=metadata_connection_config,
         beam_pipeline_args=beam_pipeline_args,
