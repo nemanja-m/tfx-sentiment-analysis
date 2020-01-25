@@ -12,7 +12,6 @@ from tfx.orchestration.airflow.airflow_dag_runner import AirflowPipelineConfig
 from tfx.utils.dsl_utils import external_input
 
 _root_dir = os.path.dirname(os.path.abspath(__file__))
-
 _DATA_ROOT = os.path.join(_root_dir, "data", "interim")
 
 # Path to the module containing preprocessing_fn and _build_estimator required by TFX.
@@ -30,7 +29,7 @@ _BEAM_WORKERS_COUNT = 0
 
 _AIRFLOW_CONFIG = {
     "schedule_interval": None,
-    "start_date": datetime.datetime(2019, 1, 1),
+    "start_date": datetime.datetime(2020, 1, 1),
 }
 
 
