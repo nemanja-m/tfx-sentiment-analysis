@@ -29,7 +29,7 @@ fastavro==0.21.24
 fasteners==0.15
 Flask==1.0.4
 Flask-Admin==1.5.3
-Flask-AppBuilder==1.12.3
+Flask-AppBuilder==3.3.4
 Flask-Babel==0.12.2
 Flask-Caching==1.3.3
 Flask-Login==0.4.1
